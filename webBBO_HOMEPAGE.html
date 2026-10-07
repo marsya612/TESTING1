@@ -83,19 +83,81 @@
       font-weight: 800;
     }
 
+    /* menu desktop (muncul di layar besar saja) */
     .nav-links {
       display: none;
       gap: 50px;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
       font-size: 18px;
       font-weight: 500;
     }
 
-    .nav-links a:hover {
+    .nav-btn:hover {
       text-decoration: underline;
     }
 
+    .nav-btn i {
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .nav-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 210px;
+      padding: 8px 0;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+      z-index: 20;
+    }
+
+    /* menu paling kanan dibuka ke arah kiri supaya tidak keluar layar */
+    .nav-item:last-child .nav-dropdown {
+      left: auto;
+      right: 0;
+    }
+
+    .nav-btn.open + .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .nav-dropdown a:hover {
+      background: #f2f2f2;
+    }
+
     /* tombol hamburger, berubah jadi X saat sidebar terbuka */
-    .btn-menu {
+    /* .btn-menu {
       position: relative;
       z-index: 250; /* di atas overlay supaya X tetap kelihatan */
       width: 44px;
@@ -105,7 +167,7 @@
       justify-content: center;
       align-items: center;
       gap: 7px;
-    }
+    } */
 
     .btn-menu span {
       display: block;
@@ -435,28 +497,6 @@
       margin-bottom: 8px;
     }
 
-    /* judul footer = tombol dropdown (aktif di desktop saja) */
-    .footer-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0;
-      font: inherit;
-      text-align: left;
-      pointer-events: none;
-      cursor: default;
-    }
-
-    .footer-btn i {
-      display: none;
-      font-size: 16px;
-      transition: transform 0.3s;
-    }
-
-    .footer-btn.open i {
-      transform: rotate(180deg);
-    }
-
     .footer li a {
       display: block;
       padding: 4px 0;
@@ -678,22 +718,6 @@
         font-size: 22px;
       }
 
-      /* dropdown footer aktif di desktop */
-      .footer-btn {
-        pointer-events: auto;
-        cursor: pointer;
-      }
-
-      .footer-btn i {
-        display: inline-block;
-      }
-
-      .footer-list {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-      }
-
       .footer li a {
         font-size: 18px;
       }
@@ -713,10 +737,40 @@
     <div class="container">
       <a href="#" class="logo">Logo</a>
 
-      <nav class="nav-links">
-        <a href="#products">Products</a>
-        <a href="#services">Our Services</a>
-        <a href="#about">About Us</a>
+      <!-- menu desktop dengan dropdown -->
+      <nav class="nav-links" aria-label="Menu utama">
+        <div class="nav-item">
+          <button type="button" class="nav-btn" aria-expanded="false">
+            Products <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">BBO Events</a></li>
+            <li><a href="#">BBO Jobs</a></li>
+            <li><a href="#">Toko BBO</a></li>
+            <li><a href="#">BBO Pay</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <button type="button" class="nav-btn" aria-expanded="false">
+            Our Services <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Login Dashboard</a></li>
+            <li><a href="#">Claim Code</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <button type="button" class="nav-btn" aria-expanded="false">
+            About Us <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term and Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
       </nav>
 
       <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false">
@@ -856,38 +910,26 @@
         </div>
       </div>
 
-      <div class="f-about" id="about">
-        <h3>
-          <button type="button" class="footer-btn" aria-expanded="false">
-            About Us <i class="fa-solid fa-caret-up"></i>
-          </button>
-        </h3>
-        <ul class="footer-list">
+      <div class="f-about">
+        <h3>About Us</h3>
+        <ul>
           <li><a href="#">Privacy Policy</a></li>
           <li><a href="#">Term and Conditions</a></li>
           <li><a href="#">Contact Us</a></li>
         </ul>
       </div>
 
-      <div class="f-service" id="services">
-        <h3>
-          <button type="button" class="footer-btn" aria-expanded="false">
-            Our Services <i class="fa-solid fa-caret-up"></i>
-          </button>
-        </h3>
-        <ul class="footer-list">
+      <div class="f-service">
+        <h3>Our Services</h3>
+        <ul>
           <li><a href="#">Login Dashboard</a></li>
           <li><a href="#">Claim Code</a></li>
         </ul>
       </div>
 
-      <div class="f-product" id="products">
-        <h3>
-          <button type="button" class="footer-btn" aria-expanded="false">
-            Products <i class="fa-solid fa-caret-up"></i>
-          </button>
-        </h3>
-        <ul class="footer-list">
+      <div class="f-product">
+        <h3>Products</h3>
+        <ul>
           <li><a href="#">BBO Events</a></li>
           <li><a href="#">BBO Jobs</a></li>
           <li><a href="#">Toko BBO</a></li>
@@ -930,39 +972,39 @@
   <a href="#" class="wa-float" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
   <script>
-    // ---------- fungsi dropdown (dipakai sidebar dan footer) ----------
+    // ---------- dropdown di header (desktop) ----------
     // kalau satu dropdown dibuka, yang lain otomatis menutup
-    function buatDropdown(daftarBtn) {
-      function buka(btn) {
-        const isi = btn.parentElement.tagName === 'H3'
-          ? btn.parentElement.nextElementSibling
-          : btn.nextElementSibling;
-        btn.classList.add('open');
-        btn.setAttribute('aria-expanded', 'true');
-        isi.style.maxHeight = isi.scrollHeight + 'px';
-      }
+    const navBtns = document.querySelectorAll('.nav-btn');
 
-      function tutup(btn) {
-        const isi = btn.parentElement.tagName === 'H3'
-          ? btn.parentElement.nextElementSibling
-          : btn.nextElementSibling;
+    function tutupNav() {
+      navBtns.forEach(function (btn) {
         btn.classList.remove('open');
         btn.setAttribute('aria-expanded', 'false');
-        isi.style.maxHeight = null;
-      }
-
-      daftarBtn.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          const sudahBuka = btn.classList.contains('open');
-          daftarBtn.forEach(tutup);
-          if (!sudahBuka) buka(btn);
-        });
       });
-
-      return { buka: buka, tutup: tutup, daftar: daftarBtn };
     }
 
-    // ---------- sidebar menu ----------
+    navBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        tutupNav();
+        if (!sudahBuka) {
+          btn.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // tutup saat salah satu link di dropdown diklik
+    document.querySelectorAll('.nav-dropdown a').forEach(function (link) {
+      link.addEventListener('click', tutupNav);
+    });
+
+    // tutup saat klik di luar menu
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-item')) tutupNav();
+    });
+
+    // ---------- sidebar menu (mobile) ----------
     const btnMenu = document.getElementById('btnMenu');
     const btnClose = document.getElementById('btnClose');
     const sidebar = document.getElementById('sidebar');
@@ -1003,30 +1045,51 @@
       link.addEventListener('click', tutupSidebar);
     });
 
-    // tutup saat tekan Esc
+    // tutup semua menu saat tekan Esc
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') tutupSidebar();
+      if (e.key === 'Escape') {
+        tutupSidebar();
+        tutupNav();
+      }
     });
 
-    // dropdown di sidebar
-    const dropdownSidebar = buatDropdown(document.querySelectorAll('.dropdown-btn'));
-
-    // About Us terbuka dari awal, seperti di coretan
-    // (hapus baris ini kalau mau semuanya tertutup)
-    dropdownSidebar.buka(document.getElementById('btnAbout'));
-
-    // ---------- dropdown di footer (desktop) ----------
-    const dropdownFooter = buatDropdown(document.querySelectorAll('.footer-btn'));
-
-    // ---------- resize ----------
+    // tutup otomatis saat ukuran layar berubah
     window.addEventListener('resize', function () {
       if (window.innerWidth >= 1024) {
         tutupSidebar();
       } else {
-        // di mobile footer selalu terbuka, jadi reset dropdown-nya
-        dropdownFooter.daftar.forEach(dropdownFooter.tutup);
+        tutupNav();
       }
     });
+
+    // ---------- dropdown di sidebar ----------
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+
+    function bukaDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      isi.style.maxHeight = isi.scrollHeight + 'px';
+    }
+
+    function tutupDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      isi.style.maxHeight = null;
+    }
+
+    dropdownBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        dropdownBtns.forEach(tutupDropdown);
+        if (!sudahBuka) bukaDropdown(btn);
+      });
+    });
+
+    // About Us terbuka dari awal, seperti di coretan
+    // (hapus baris ini kalau mau semuanya tertutup)
+    bukaDropdown(document.getElementById('btnAbout'));
 
     // ---------- slider utama ----------
     const slides = document.getElementById('slides');

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBO - Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+      font-size: 40px;
+    }
+
+    /* navbar */
+    .navbar {
+      height: 90px;
+      position: relative;
+      background: #fff;
+      z-index: 10;
+    }
+
+    .navbar .container {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: none;
+      gap: 50px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .menu-toggle {
+      font-size: 30px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 90px;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      padding: 10px 5%;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 14px 0;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .mobile-menu.show {
+      display: block;
+    }
+
+    /* slider */
+    .slider {
+      position: relative;
+      overflow: hidden;
+      background: #d9d9d9;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 240px;
+      font-size: 60px;
+    }
+
+    .btn-arrow {
+      display: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      background: transparent;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .btn-arrow:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-prev { left: 7%; }
+    .btn-next { right: 7%; }
+
+    .dots {
+      position: absolute;
+      bottom: 12px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      border: none;
+      background: #f2f2f2;
+      cursor: pointer;
+      transition: width 0.3s;
+    }
+
+    .dot.active {
+      width: 30px;
+    }
+
+    /* galeri */
+    .galeri {
+      padding: 30px 0 50px;
+    }
+
+    .galeri h2 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .galeri-list {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 30px 7%;
+      scrollbar-width: none;
+    }
+
+    .galeri-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .galeri-item {
+      min-width: 86%;
+      height: 260px;
+      border-radius: 12px;
+      scroll-snap-align: center;
+      transform: scale(0.85);
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+
+    .galeri-item.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* footer */
+    .footer {
+      padding: 40px 0 30px;
+    }
+
+    .footer-wrap {
+      display: grid;
+      gap: 30px;
+    }
+
+    .footer-logo .logo {
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .footer-img {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-img div {
+      width: 130px;
+      height: 56px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .footer h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .footer li a {
+      display: block;
+      padding: 4px 0;
+      font-size: 15px;
+    }
+
+    .footer li a:hover {
+      text-decoration: underline;
+    }
+
+    .store-btn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .store-btn a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .store-btn i {
+      font-size: 24px;
+    }
+
+    .store-btn strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .sosmed {
+      display: flex;
+      gap: 14px;
+    }
+
+    .sosmed a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .sosmed a:hover {
+      background: #333;
+    }
+
+    .copyright {
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 20px 0;
+    }
+
+    /* tombol wa melayang */
+    .wa-float {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    /* tablet */
+    @media (min-width: 640px) {
+      .footer-wrap {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-logo,
+      .footer-links {
+        grid-column: 1 / -1;
+      }
+
+      .footer-links {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .galeri-item {
+        min-width: 60%;
+      }
+    }
+
+    /* desktop */
+    @media (min-width: 1024px) {
+      .navbar {
+        height: 100px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .menu-toggle,
+      .mobile-menu {
+        display: none !important;
+      }
+
+      .slide {
+        height: 600px;
+      }
+
+      .btn-arrow {
+        display: block;
+      }
+
+      .dots {
+        display: none;
+      }
+
+      .galeri h2 {
+        font-size: 48px;
+        margin-bottom: 40px;
+      }
+
+      .galeri-list {
+        gap: 0;
+        padding: 50px 8%;
+      }
+
+      .galeri-item {
+        min-width: 42%;
+        height: 360px;
+        border-radius: 8px;
+      }
+
+      .galeri-item.active {
+        height: 440px;
+      }
+
+      .footer {
+        padding: 55px 0;
+      }
+
+      .footer-wrap {
+        grid-template-columns: 1.1fr 2.3fr 1.2fr;
+        gap: 40px;
+        align-items: start;
+      }
+
+      .footer-logo,
+      .footer-links {
+        grid-column: auto;
+      }
+
+      .footer-img div {
+        width: 150px;
+        height: 76px;
+      }
+
+      .footer h3 {
+        font-size: 22px;
+      }
+
+      .footer li a {
+        font-size: 18px;
+      }
+
+      .wa-float {
+        width: 70px;
+        height: 70px;
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="#" class="logo">Logo</a>
+
+      <nav class="nav-links">
+        <a href="#products">Products</a>
+        <a href="#services">Our Services</a>
+        <a href="#about">About Us</a>
+      </nav>
+
+      <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#products">Products</a>
+      <a href="#services">Our Services</a>
+      <a href="#about">About Us</a>
+    </div>
+  </header>
+
+  <!-- slider -->
+  <section class="slider">
+    <div class="slides" id="slides">
+      <div class="slide placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="slide placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="slide placeholder"><i class="fa-regular fa-image"></i></div>
+    </div>
+
+    <button class="btn-arrow btn-prev" id="prev"><i class="fa-solid fa-arrow-left"></i></button>
+    <button class="btn-arrow btn-next" id="next"><i class="fa-solid fa-arrow-right"></i></button>
+
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <!-- galeri -->
+  <section class="galeri">
+    <h2>GALERY</h2>
+    <div class="galeri-list" id="galeriList">
+      <div class="galeri-item placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="galeri-item placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="galeri-item placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="galeri-item placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="galeri-item placeholder"><i class="fa-regular fa-image"></i></div>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container footer-wrap">
+
+      <div class="footer-logo">
+        <a href="#" class="logo">Logo</a>
+        <div class="footer-img">
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div id="products">
+          <h3>Products</h3>
+          <ul>
+            <li><a href="#">BBO Events</a></li>
+            <li><a href="#">BBO Jobs</a></li>
+            <li><a href="#">Toko BBO</a></li>
+            <li><a href="#">BBO Pay</a></li>
+          </ul>
+        </div>
+
+        <div id="services">
+          <h3>Our Services</h3>
+          <ul>
+            <li><a href="#">Login Dashboard</a></li>
+            <li><a href="#">Claim Code</a></li>
+          </ul>
+        </div>
+
+        <div id="about">
+          <h3>About Us</h3>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term and Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <h3>Download The BBO App</h3>
+        <div class="store-btn">
+          <a href="#">
+            <i class="fa-brands fa-apple"></i>
+            <span>Download on The<strong>APP Store</strong></span>
+          </a>
+          <a href="#">
+            <i class="fa-brands fa-google-play"></i>
+            <span>Get It On<strong>Google Play</strong></span>
+          </a>
+        </div>
+
+        <h3>Connect With Us</h3>
+        <div class="sosmed">
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#"><i class="fa-regular fa-envelope"></i></a>
+          <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <div class="copyright">
+    <div class="container">
+      Copyright © 2026 BBO - All rights reserved. Powered by bbo.co.id
+    </div>
+  </div>
+
+  <!-- tombol wa -->
+  <a href="#" class="wa-float"><i class="fa-brands fa-whatsapp"></i></a>
+
+  <script>
+    // buka tutup menu hamburger
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    menuToggle.addEventListener('click', function () {
+      mobileMenu.classList.toggle('show');
+    });
+
+    // slider
+    const slides = document.getElementById('slides');
+    const total = slides.children.length;
+    const dotsBox = document.getElementById('dots');
+    let index = 0;
+    let auto;
+
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'dot';
+      dot.addEventListener('click', function () {
+        showSlide(i);
+        startAuto();
+      });
+      dotsBox.appendChild(dot);
+    }
+
+    function showSlide(n) {
+      index = (n + total) % total;
+      slides.style.transform = 'translateX(-' + index * 100 + '%)';
+
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach(function (d, i) {
+        d.classList.toggle('active', i === index);
+      });
+    }
+
+    function startAuto() {
+      clearInterval(auto);
+      auto = setInterval(function () {
+        showSlide(index + 1);
+      }, 5000);
+    }
+
+    document.getElementById('prev').addEventListener('click', function () {
+      showSlide(index - 1);
+      startAuto();
+    });
+
+    document.getElementById('next').addEventListener('click', function () {
+      showSlide(index + 1);
+      startAuto();
+    });
+
+    // geser untuk hp
+    let touchStart = 0;
+
+    slides.addEventListener('touchstart', function (e) {
+      touchStart = e.touches[0].clientX;
+    });
+
+    slides.addEventListener('touchend', function (e) {
+      const selisih = e.changedTouches[0].clientX - touchStart;
+      if (selisih < -40) showSlide(index + 1);
+      if (selisih > 40) showSlide(index - 1);
+      startAuto();
+    });
+
+    showSlide(0);
+    startAuto();
+
+    // galeri: item paling tengah jadi besar
+    const galeriList = document.getElementById('galeriList');
+    const galeriItems = document.querySelectorAll('.galeri-item');
+
+    function cekTengah() {
+      const tengah = galeriList.getBoundingClientRect().left + galeriList.clientWidth / 2;
+      let terdekat = null;
+      let jarakMin = Infinity;
+
+      galeriItems.forEach(function (item) {
+        const box = item.getBoundingClientRect();
+        const jarak = Math.abs(box.left + box.width / 2 - tengah);
+        if (jarak < jarakMin) {
+          jarakMin = jarak;
+          terdekat = item;
+        }
+      });
+
+      galeriItems.forEach(function (item) {
+        item.classList.toggle('active', item === terdekat);
+      });
+    }
+
+    galeriList.addEventListener('scroll', cekTengah);
+    window.addEventListener('resize', cekTengah);
+
+    // mulai dari item tengah
+    const tengahItem = galeriItems[Math.floor(galeriItems.length / 2)];
+    galeriList.scrollLeft = tengahItem.offsetLeft - (galeriList.clientWidth - tengahItem.offsetWidth) / 2;
+    cekTengah();
+  </script>
+
+</body>
+</html>

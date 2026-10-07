@@ -51,12 +51,24 @@
       font-size: 40px;
     }
 
+    /* icon plus bulat untuk Show All */
+    .icon-plus {
+      width: 44px;
+      height: 44px;
+      border: 3px solid #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
+    }
+
     /* ---------- navbar ---------- */
     .navbar {
       height: 90px;
       background: #fff;
       position: relative;
-      z-index: 10;
     }
 
     .navbar .container {
@@ -82,13 +94,42 @@
       text-decoration: underline;
     }
 
+    /* tombol hamburger, berubah jadi X saat sidebar terbuka */
     .btn-menu {
+      position: relative;
+      z-index: 250; /* di atas overlay supaya X tetap kelihatan */
       width: 44px;
       height: 44px;
-      font-size: 32px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-menu span {
+      display: block;
+      width: 30px;
+      height: 3px;
+      background: #000;
+      border-radius: 3px;
+      transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s;
+    }
+
+    .btn-menu.active span {
+      background: #fff;
+    }
+
+    .btn-menu.active span:nth-child(1) {
+      transform: translateY(10px) rotate(45deg);
+    }
+
+    .btn-menu.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .btn-menu.active span:nth-child(3) {
+      transform: translateY(-10px) rotate(-45deg);
     }
 
     /* ---------- sidebar menu (slide dari kiri) ---------- */
@@ -98,7 +139,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s, visibility 0.3s;
@@ -270,7 +311,7 @@
       justify-content: center;
       gap: 20px;
       padding: 0 5%;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       overflow-x: auto;
     }
 
@@ -298,10 +339,10 @@
     .galeri-list {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 20px 10%;
+      gap: 15px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
+      padding: 30px 7%;
       scrollbar-width: none;
     }
 
@@ -310,15 +351,27 @@
     }
 
     .galeri-item {
-      min-width: 80%;
-      height: 220px;
+      min-width: 86%;
+      height: 260px;
       border-radius: 12px;
       scroll-snap-align: center;
-      transition: height 0.3s;
+      transform: scale(0.85);
+      opacity: 0.7;
+      transition: 0.3s;
     }
 
     .galeri-item.active {
-      height: 260px;
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* kartu Show All di akhir slider */
+    .show-all-card {
+      flex-direction: column;
+      gap: 12px;
+      color: #000;
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .btn-galeri {
@@ -333,8 +386,8 @@
       z-index: 2;
     }
 
-    .btn-galeri.prev { left: 14%; }
-    .btn-galeri.next { right: 14%; }
+    .btn-galeri.prev { left: 12%; }
+    .btn-galeri.next { right: 12%; }
 
     /* galeri versi desktop (grid) */
     .galeri-grid {
@@ -380,6 +433,28 @@
       font-size: 16px;
       font-weight: 600;
       margin-bottom: 8px;
+    }
+
+    /* judul footer = tombol dropdown (aktif di desktop saja) */
+    .footer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      font: inherit;
+      text-align: left;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .footer-btn i {
+      display: none;
+      font-size: 16px;
+      transition: transform 0.3s;
+    }
+
+    .footer-btn.open i {
+      transform: rotate(180deg);
     }
 
     .footer li a {
@@ -466,6 +541,20 @@
       z-index: 100;
     }
 
+    /* ---------- tablet ---------- */
+    @media (min-width: 640px) {
+      .galeri-list {
+        padding: 30px 20%;
+      }
+
+      .galeri-item {
+        min-width: 60%;
+      }
+
+      .btn-galeri.prev { left: 24%; }
+      .btn-galeri.next { right: 24%; }
+    }
+
     /* ---------- desktop ---------- */
     @media (min-width: 1024px) {
       .navbar {
@@ -549,19 +638,15 @@
         border-radius: 8px;
       }
 
-      .show-all {
+      .grid-item.show-all {
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
         color: #000;
         font-size: 20px;
         font-weight: 700;
       }
 
-      .show-all i {
-        font-size: 40px;
-      }
-
-      .show-all:hover {
+      .grid-item.show-all:hover {
         text-decoration: underline;
       }
 
@@ -593,6 +678,22 @@
         font-size: 22px;
       }
 
+      /* dropdown footer aktif di desktop */
+      .footer-btn {
+        pointer-events: auto;
+        cursor: pointer;
+      }
+
+      .footer-btn i {
+        display: inline-block;
+      }
+
+      .footer-list {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+
       .footer li a {
         font-size: 18px;
       }
@@ -619,7 +720,9 @@
       </nav>
 
       <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false">
-        <i class="fa-solid fa-bars"></i>
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
   </header>
@@ -698,7 +801,7 @@
       <button class="tab" data-filter="exhibition">Exhibition</button>
     </div>
 
-    <!-- versi mobile: slider -->
+    <!-- versi mobile: slider (6 gambar + Show All) -->
     <div class="galeri-slider">
       <button class="btn-galeri prev" id="galeriPrev" aria-label="Sebelumnya"><i class="fa-solid fa-arrow-left"></i></button>
       <button class="btn-galeri next" id="galeriNext" aria-label="Berikutnya"><i class="fa-solid fa-arrow-right"></i></button>
@@ -710,6 +813,12 @@
         <div class="galeri-item placeholder" data-kategori="event"><i class="fa-regular fa-image"></i></div>
         <div class="galeri-item placeholder" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
         <div class="galeri-item placeholder" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
+
+        <!-- Show All selalu di akhir -->
+        <a href="#" class="galeri-item placeholder show-all-card">
+          <span class="icon-plus"><i class="fa-solid fa-plus"></i></span>
+          Show All
+        </a>
       </div>
     </div>
 
@@ -727,7 +836,10 @@
         <div class="grid-item" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
         <div class="grid-item" data-kategori="event"><i class="fa-regular fa-image"></i></div>
         <div class="grid-item" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
-        <a href="#" class="grid-item show-all"><i class="fa-regular fa-circle-plus"></i>Show All</a>
+        <a href="#" class="grid-item show-all">
+          <span class="icon-plus"><i class="fa-solid fa-plus"></i></span>
+          Show All
+        </a>
       </div>
     </div>
   </section>
@@ -745,8 +857,12 @@
       </div>
 
       <div class="f-about" id="about">
-        <h3>About Us</h3>
-        <ul>
+        <h3>
+          <button type="button" class="footer-btn" aria-expanded="false">
+            About Us <i class="fa-solid fa-caret-up"></i>
+          </button>
+        </h3>
+        <ul class="footer-list">
           <li><a href="#">Privacy Policy</a></li>
           <li><a href="#">Term and Conditions</a></li>
           <li><a href="#">Contact Us</a></li>
@@ -754,16 +870,24 @@
       </div>
 
       <div class="f-service" id="services">
-        <h3>Our Services</h3>
-        <ul>
+        <h3>
+          <button type="button" class="footer-btn" aria-expanded="false">
+            Our Services <i class="fa-solid fa-caret-up"></i>
+          </button>
+        </h3>
+        <ul class="footer-list">
           <li><a href="#">Login Dashboard</a></li>
           <li><a href="#">Claim Code</a></li>
         </ul>
       </div>
 
       <div class="f-product" id="products">
-        <h3>Products</h3>
-        <ul>
+        <h3>
+          <button type="button" class="footer-btn" aria-expanded="false">
+            Products <i class="fa-solid fa-caret-up"></i>
+          </button>
+        </h3>
+        <ul class="footer-list">
           <li><a href="#">BBO Events</a></li>
           <li><a href="#">BBO Jobs</a></li>
           <li><a href="#">Toko BBO</a></li>
@@ -806,6 +930,38 @@
   <a href="#" class="wa-float" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
   <script>
+    // ---------- fungsi dropdown (dipakai sidebar dan footer) ----------
+    // kalau satu dropdown dibuka, yang lain otomatis menutup
+    function buatDropdown(daftarBtn) {
+      function buka(btn) {
+        const isi = btn.parentElement.tagName === 'H3'
+          ? btn.parentElement.nextElementSibling
+          : btn.nextElementSibling;
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        isi.style.maxHeight = isi.scrollHeight + 'px';
+      }
+
+      function tutup(btn) {
+        const isi = btn.parentElement.tagName === 'H3'
+          ? btn.parentElement.nextElementSibling
+          : btn.nextElementSibling;
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        isi.style.maxHeight = null;
+      }
+
+      daftarBtn.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const sudahBuka = btn.classList.contains('open');
+          daftarBtn.forEach(tutup);
+          if (!sudahBuka) buka(btn);
+        });
+      });
+
+      return { buka: buka, tutup: tutup, daftar: daftarBtn };
+    }
+
     // ---------- sidebar menu ----------
     const btnMenu = document.getElementById('btnMenu');
     const btnClose = document.getElementById('btnClose');
@@ -815,18 +971,30 @@
     function bukaSidebar() {
       sidebar.classList.add('open');
       overlay.classList.add('show');
+      btnMenu.classList.add('active');
       document.body.style.overflow = 'hidden';
       btnMenu.setAttribute('aria-expanded', 'true');
+      btnMenu.setAttribute('aria-label', 'Tutup menu');
     }
 
     function tutupSidebar() {
       sidebar.classList.remove('open');
       overlay.classList.remove('show');
+      btnMenu.classList.remove('active');
       document.body.style.overflow = '';
       btnMenu.setAttribute('aria-expanded', 'false');
+      btnMenu.setAttribute('aria-label', 'Buka menu');
     }
 
-    btnMenu.addEventListener('click', bukaSidebar);
+    // hamburger: klik pertama buka, klik kedua (sudah jadi X) tutup
+    btnMenu.addEventListener('click', function () {
+      if (sidebar.classList.contains('open')) {
+        tutupSidebar();
+      } else {
+        bukaSidebar();
+      }
+    });
+
     btnClose.addEventListener('click', tutupSidebar);
     overlay.addEventListener('click', tutupSidebar);
 
@@ -840,40 +1008,25 @@
       if (e.key === 'Escape') tutupSidebar();
     });
 
-    // tutup otomatis kalau layar jadi desktop
-    window.addEventListener('resize', function () {
-      if (window.innerWidth >= 1024) tutupSidebar();
-    });
-
-    // ---------- dropdown di sidebar ----------
-    // kalau satu dropdown dibuka, yang lain otomatis menutup
-    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
-
-    function bukaDropdown(btn) {
-      const isi = btn.nextElementSibling;
-      btn.classList.add('open');
-      btn.setAttribute('aria-expanded', 'true');
-      isi.style.maxHeight = isi.scrollHeight + 'px';
-    }
-
-    function tutupDropdown(btn) {
-      const isi = btn.nextElementSibling;
-      btn.classList.remove('open');
-      btn.setAttribute('aria-expanded', 'false');
-      isi.style.maxHeight = null;
-    }
-
-    dropdownBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        const sudahBuka = btn.classList.contains('open');
-        dropdownBtns.forEach(tutupDropdown);
-        if (!sudahBuka) bukaDropdown(btn);
-      });
-    });
+    // dropdown di sidebar
+    const dropdownSidebar = buatDropdown(document.querySelectorAll('.dropdown-btn'));
 
     // About Us terbuka dari awal, seperti di coretan
     // (hapus baris ini kalau mau semuanya tertutup)
-    bukaDropdown(document.getElementById('btnAbout'));
+    dropdownSidebar.buka(document.getElementById('btnAbout'));
+
+    // ---------- dropdown di footer (desktop) ----------
+    const dropdownFooter = buatDropdown(document.querySelectorAll('.footer-btn'));
+
+    // ---------- resize ----------
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        tutupSidebar();
+      } else {
+        // di mobile footer selalu terbuka, jadi reset dropdown-nya
+        dropdownFooter.daftar.forEach(dropdownFooter.tutup);
+      }
+    });
 
     // ---------- slider utama ----------
     const slides = document.getElementById('slides');
@@ -956,7 +1109,7 @@
       });
     });
 
-    // ---------- galeri mobile: item tengah jadi besar ----------
+    // ---------- galeri mobile: item paling tengah jadi besar ----------
     const galeriList = document.getElementById('galeriList');
     const galeriItems = galeriList.querySelectorAll('.galeri-item');
 
@@ -986,7 +1139,7 @@
 
     // panah galeri
     function geserGaleri(arah) {
-      const lebar = galeriItems[0].offsetWidth + 12;
+      const lebar = galeriItems[0].offsetWidth + 15;
       galeriList.scrollBy({ left: arah * lebar, behavior: 'smooth' });
     }
 

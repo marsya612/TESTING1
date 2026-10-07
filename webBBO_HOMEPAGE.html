@@ -846,8 +846,8 @@
 
   <!-- galeri -->
   <section class="galeri">
-    <!-- <h2>GALERY</h2> -->
-    <a href="galeri.html" class="galeri-item placeholder show-all-card">
+    <!-- judul GALERY bisa diklik menuju halaman galeri -->
+    <h2><a href="galeri.html">GALERY</a></h2>
 
     <div class="tabs">
       <button class="tab active" data-filter="all">All Event</button>
@@ -870,8 +870,7 @@
         <div class="galeri-item placeholder" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
 
         <!-- Show All selalu di akhir -->
-        <a href="galeri.html" class="grid-item show-all">
-        <!-- <a href="#" class="galeri-item placeholder show-all-card"> -->
+        <a href="galeri.html" class="galeri-item placeholder show-all-card">
           <span class="icon-plus"><i class="fa-solid fa-plus"></i></span>
           Show All
         </a>
@@ -892,7 +891,6 @@
         <div class="grid-item" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
         <div class="grid-item" data-kategori="event"><i class="fa-regular fa-image"></i></div>
         <div class="grid-item" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
-        <!-- <a href="#" class="grid-item show-all"> -->
         <a href="galeri.html" class="grid-item show-all">
           <span class="icon-plus"><i class="fa-solid fa-plus"></i></span>
           Show All
@@ -1111,114 +1109,3 @@
       });
       dotsBox.appendChild(dot);
     }
-
-    function showSlide(n) {
-      index = (n + total) % total;
-      slides.style.transform = 'translateX(-' + index * 100 + '%)';
-
-      document.querySelectorAll('.dot').forEach(function (d, i) {
-        d.classList.toggle('active', i === index);
-      });
-    }
-
-    function startAuto() {
-      clearInterval(auto);
-      auto = setInterval(function () {
-        showSlide(index + 1);
-      }, 5000);
-    }
-
-    document.getElementById('prev').addEventListener('click', function () {
-      showSlide(index - 1);
-      startAuto();
-    });
-
-    document.getElementById('next').addEventListener('click', function () {
-      showSlide(index + 1);
-      startAuto();
-    });
-
-    // geser untuk hp
-    let touchStart = 0;
-
-    slides.addEventListener('touchstart', function (e) {
-      touchStart = e.touches[0].clientX;
-    });
-
-    slides.addEventListener('touchend', function (e) {
-      const selisih = e.changedTouches[0].clientX - touchStart;
-      if (selisih < -40) showSlide(index + 1);
-      if (selisih > 40) showSlide(index - 1);
-      startAuto();
-    });
-
-    showSlide(0);
-    startAuto();
-
-    // ---------- galeri: tab filter ----------
-    const tabs = document.querySelectorAll('.tab');
-    const semuaItem = document.querySelectorAll('[data-kategori]');
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        tabs.forEach(function (t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-
-        const kategori = tab.dataset.filter;
-        semuaItem.forEach(function (item) {
-          const cocok = kategori === 'all' || item.dataset.kategori === kategori;
-          item.style.display = cocok ? '' : 'none';
-        });
-
-        galeriList.scrollLeft = 0;
-        cekTengah();
-      });
-    });
-
-    // ---------- galeri mobile: item paling tengah jadi besar ----------
-    const galeriList = document.getElementById('galeriList');
-    const galeriItems = galeriList.querySelectorAll('.galeri-item');
-
-    function cekTengah() {
-      const tengah = galeriList.getBoundingClientRect().left + galeriList.clientWidth / 2;
-      let terdekat = null;
-      let jarakMin = Infinity;
-
-      galeriItems.forEach(function (item) {
-        if (item.offsetParent === null) return; // item yang disembunyikan
-        const box = item.getBoundingClientRect();
-        const jarak = Math.abs(box.left + box.width / 2 - tengah);
-        if (jarak < jarakMin) {
-          jarakMin = jarak;
-          terdekat = item;
-        }
-      });
-
-      galeriItems.forEach(function (item) {
-        item.classList.toggle('active', item === terdekat);
-      });
-    }
-
-    galeriList.addEventListener('scroll', cekTengah);
-    window.addEventListener('resize', cekTengah);
-    window.addEventListener('load', cekTengah);
-
-    // panah galeri
-    function geserGaleri(arah) {
-      const lebar = galeriItems[0].offsetWidth + 15;
-      galeriList.scrollBy({ left: arah * lebar, behavior: 'smooth' });
-    }
-
-    document.getElementById('galeriPrev').addEventListener('click', function () {
-      geserGaleri(-1);
-    });
-
-    document.getElementById('galeriNext').addEventListener('click', function () {
-      geserGaleri(1);
-    });
-
-    cekTengah();
-  </script>
-
-</body>
-</html>

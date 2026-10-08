@@ -8,178 +8,753 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    /* ===== CSS bersama: navbar, sidebar, footer, tombol WA ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', Arial, Helvetica, sans-serif; color: #000; }
-    a { color: inherit; text-decoration: none; }
-    ul { list-style: none; }
-    button { font-family: inherit; background: none; border: none; color: inherit; cursor: pointer; }
-    .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-    .placeholder { background-color: #d9d9d9; display: flex; align-items: center; justify-content: center; color: #b3b3b3; font-size: 40px; }
-
-    .navbar { height: 90px; background: #fff; position: relative; z-index: 50; }
-    .navbar .container { height: 100%; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 24px; font-weight: 800; }
-    .nav-links { display: none; gap: 50px; align-items: center; }
-    .nav-item { position: relative; }
-    .nav-btn { display: flex; align-items: center; gap: 10px; padding: 10px 0; font-size: 18px; font-weight: 500; }
-    .nav-btn:hover { text-decoration: underline; }
-    .nav-btn i { font-size: 14px; transition: transform .3s; }
-    .nav-btn.open i { transform: rotate(180deg); }
-    .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 210px; padding: 8px 0; background: #fff; border: 1px solid #d9d9d9; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,.12); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .25s, transform .25s, visibility .25s; z-index: 20; }
-    .nav-item:last-child .nav-dropdown { left: auto; right: 0; }
-    .nav-btn.open + .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-    .nav-dropdown a { display: block; padding: 10px 20px; font-size: 16px; }
-    .nav-dropdown a:hover { background: #f2f2f2; }
-
-    .btn-menu { position: relative; z-index: 250; width: 44px; height: 44px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 7px; }
-    .btn-menu span { display: block; width: 30px; height: 3px; background: #000; border-radius: 3px; transition: transform .3s, opacity .3s, background .3s; }
-    .btn-menu.active span { background: #fff; }
-    .btn-menu.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
-    .btn-menu.active span:nth-child(2) { opacity: 0; }
-    .btn-menu.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
-
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; z-index: 150; }
-    .overlay.show { opacity: 1; visibility: visible; }
-    .sidebar { position: fixed; top: 0; left: 0; width: 80%; max-width: 320px; height: 100%; background: #fff; display: flex; flex-direction: column; transform: translateX(-100%); visibility: hidden; transition: transform .3s, visibility .3s; z-index: 200; }
-    .sidebar.open { transform: translateX(0); visibility: visible; }
-    .sidebar-head { height: 90px; flex: none; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; }
-    .btn-close { width: 44px; height: 44px; border: 2px solid #000; font-size: 20px; display: flex; align-items: center; justify-content: center; }
-    .sidebar-menu { padding: 10px 20px; overflow-y: auto; }
-    .sidebar-menu > li > a, .dropdown-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 14px 0; font-size: 18px; font-weight: 500; text-align: left; }
-    .dropdown-btn i { font-size: 16px; transition: transform .3s; }
-    .dropdown-btn.open i { transform: rotate(180deg); }
-    .submenu { max-height: 0; overflow: hidden; transition: max-height .3s; }
-    .submenu a { display: block; padding: 10px 0 10px 24px; font-size: 15px; }
-    .submenu a:hover, .sidebar-menu > li > a:hover { text-decoration: underline; }
-
-    .footer { padding: 40px 0 30px; }
-    .footer-wrap { display: grid; grid-template-columns: 110px 1.3fr .8fr; grid-template-areas: "brand about product" "brand service product" "app app app"; column-gap: 14px; row-gap: 16px; }
-    .f-brand { grid-area: brand; } .f-about { grid-area: about; } .f-service { grid-area: service; } .f-product { grid-area: product; }
-    .f-app { grid-area: app; margin-top: 12px; }
-    .footer-img { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
-    .footer-img div { height: 56px; border-radius: 10px; font-size: 22px; }
-    .footer h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-    .footer li a { display: block; padding: 4px 0; font-size: 13px; }
-    .footer li a:hover { text-decoration: underline; }
-    .store-btn { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
-    .store-btn a { display: flex; align-items: center; gap: 10px; background: #000; color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 11px; }
-    .store-btn i { font-size: 24px; }
-    .store-btn strong { display: block; font-size: 14px; }
-    .sosmed { display: flex; gap: 14px; }
-    .sosmed a { width: 48px; height: 48px; border-radius: 50%; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-    .sosmed a:hover { background: #333; }
-    .copyright { background: #000; color: #fff; font-size: 12px; font-weight: 600; padding: 20px 0; }
-    .wa-float { position: fixed; right: 16px; bottom: 20px; width: 56px; height: 56px; border-radius: 50%; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,.4); z-index: 100; }
-
-    @media (min-width: 1024px) {
-      .navbar { height: 100px; }
-      .logo { font-size: 28px; }
-      .nav-links { display: flex; }
-      .btn-menu, .sidebar, .overlay { display: none !important; }
-      .footer { padding: 55px 0; }
-      .footer-wrap { grid-template-columns: 1.4fr .9fr .9fr 1.1fr 1.5fr; grid-template-areas: "brand product service about app"; column-gap: 30px; }
-      .f-app { margin-top: 0; }
-      .footer-img { flex-direction: row; margin-top: 30px; }
-      .footer-img div { width: 150px; height: 76px; }
-      .footer h3 { font-size: 22px; }
-      .footer li a { font-size: 18px; }
-      .wa-float { width: 70px; height: 70px; font-size: 34px; }
+    /* ===================== CSS BERSAMA (semua halaman) ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* ===== CSS khusus halaman Galery ===== */
-    .galeri-page { padding: 20px 0 60px; }
-    .galeri-page h1 { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 14px; }
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: #000;
+    }
 
-    .search { position: relative; max-width: 610px; margin: 0 auto 20px; }
-    .search input { width: 100%; height: 38px; padding: 0 44px 0 24px; border: none; border-radius: 8px; background: #d9d9d9; font-family: inherit; font-size: 15px; }
-    .search input:focus { outline: 2px solid #000; }
-    .search button { position: absolute; right: 0; top: 0; width: 44px; height: 38px; font-size: 16px; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    .tabs { display: flex; justify-content: center; gap: 20px; margin-bottom: 24px; overflow-x: auto; }
-    .tab { padding: 8px 2px; font-size: 15px; white-space: nowrap; border-bottom: 2px solid transparent; }
-    .tab:hover { border-bottom-color: #999; }
-    .tab.active { font-weight: 700; border-bottom-color: #000; }
+    ul {
+      list-style: none;
+    }
 
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 22px; min-height: 200px; }
-    .card { display: block; }
-    .card .thumb { height: 134px; border-radius: 12px; font-size: 36px; }
-    .card h3 { margin-top: 6px; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: -.02em; }
-    .card:hover h3 { text-decoration: underline; }
-    .kosong { grid-column: 1 / -1; text-align: center; color: #666; padding: 40px 0; }
+    button,
+    input {
+      font-family: inherit;
+    }
 
-    .paging { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 40px; font-size: 14px; flex-wrap: wrap; }
-    .paging button { padding: 6px 10px; min-width: 31px; background: #d9d9d9; }
-    .paging button.nav { background: none; padding: 6px 4px; }
-    .paging button.nav:disabled { opacity: .4; cursor: default; }
-    .paging button.active { background: #000; color: #fff; }
-    .paging span { color: #333; }
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+      font-size: 40px;
+    }
+
+    /* ---------- navbar ---------- */
+    .navbar {
+      height: 90px;
+      background: #fff;
+      position: relative;
+      z-index: 50;
+    }
+
+    .navbar .container {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    /* menu desktop (muncul di layar besar saja) */
+    .nav-links {
+      display: none;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* tulisan menu = link ke halaman */
+    .nav-link {
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    /* panah kecil = tombol buka dropdown */
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.6;
+    }
+
+    .nav-btn i {
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .nav-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 210px;
+      padding: 8px 0;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+      z-index: 20;
+    }
+
+    /* menu paling kanan dibuka ke arah kiri supaya tidak keluar layar */
+    .nav-item:last-child .nav-dropdown {
+      left: auto;
+      right: 0;
+    }
+
+    .nav-btn.open + .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .nav-dropdown a:hover {
+      background: #f2f2f2;
+    }
+
+    /* tombol hamburger */
+    .btn-menu {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-menu span {
+      display: block;
+      width: 30px;
+      height: 3px;
+      background: #000;
+      border-radius: 3px;
+    }
+
+    /* ---------- sidebar menu (slide dari kiri) ---------- */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 150;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 320px;
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition: transform 0.3s ease, visibility 0.3s;
+      z-index: 200;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .sidebar-head {
+      height: 90px;
+      flex: none;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #000;
+    }
+
+    .btn-close {
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-menu {
+      padding: 10px 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu > li > a,
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .dropdown-btn i {
+      font-size: 16px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .dropdown-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .submenu a {
+      display: block;
+      padding: 10px 0 10px 24px;
+      font-size: 15px;
+    }
+
+    .submenu a:hover,
+    .sidebar-menu > li > a:hover {
+      text-decoration: underline;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 40px 0 30px;
+    }
+
+    .footer-wrap {
+      display: grid;
+      grid-template-columns: 110px 1.3fr 0.8fr;
+      grid-template-areas:
+        "brand about product"
+        "brand service product"
+        "app app app";
+      column-gap: 14px;
+      row-gap: 16px;
+    }
+
+    .f-brand   { grid-area: brand; }
+    .f-about   { grid-area: about; }
+    .f-service { grid-area: service; }
+    .f-product { grid-area: product; }
+    .f-app     { grid-area: app; margin-top: 12px; }
+
+    .footer-img {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .footer-img div {
+      height: 56px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    .footer h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer li a {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+
+    .footer li a:hover {
+      text-decoration: underline;
+    }
+
+    .store-btn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .store-btn a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .store-btn i {
+      font-size: 24px;
+    }
+
+    .store-btn strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .sosmed {
+      display: flex;
+      gap: 14px;
+    }
+
+    .sosmed a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .sosmed a:hover {
+      background: #333;
+    }
+
+    .copyright {
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+
+    /* ---------- tombol wa melayang ---------- */
+    .wa-float {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
 
     @media (min-width: 1024px) {
-      .galeri-page { padding: 50px 0 120px; }
-      .galeri-page h1 { font-size: 48px; margin-bottom: 24px; }
-      .tabs { gap: 44px; margin-bottom: 50px; }
-      .tab { font-size: 20px; }
-      .grid { grid-template-columns: repeat(3, 1fr); gap: 30px 58px; }
-      .card .thumb { height: 270px; font-size: 60px; }
-      .card h3 { margin-top: 6px; font-size: 26px; font-weight: 700; text-transform: none; letter-spacing: 0; }
-      .paging { gap: 10px; margin-top: 70px; font-size: 18px; }
-      .paging button { padding: 6px 12px; min-width: 37px; }
+      .navbar {
+        height: 100px;
+      }
+
+      .logo {
+        font-size: 28px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .btn-menu,
+      .sidebar,
+      .overlay {
+        display: none !important;
+      }
+
+      .footer {
+        padding: 55px 0;
+      }
+
+      .footer-wrap {
+        grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.5fr;
+        grid-template-areas: "brand product service about app";
+        column-gap: 30px;
+      }
+
+      .f-app {
+        margin-top: 0;
+      }
+
+      .footer-img {
+        flex-direction: row;
+        margin-top: 30px;
+      }
+
+      .footer-img div {
+        width: 150px;
+        height: 76px;
+      }
+
+      .footer h3 {
+        font-size: 22px;
+      }
+
+      .footer li a {
+        font-size: 18px;
+      }
+
+      .wa-float {
+        width: 70px;
+        height: 70px;
+        font-size: 34px;
+      }
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    .galeri-page {
+      padding: 20px 0 60px;
+    }
+
+    .galeri-page h1 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .search {
+      position: relative;
+      max-width: 610px;
+      margin: 0 auto 20px;
+    }
+
+    .search input {
+      width: 100%;
+      height: 38px;
+      padding: 0 44px 0 24px;
+      border: none;
+      border-radius: 8px;
+      background: #d9d9d9;
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    .search input:focus {
+      outline: 2px solid #000;
+    }
+
+    .search button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 44px;
+      height: 38px;
+      font-size: 16px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 8px 2px;
+      font-size: 15px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab:hover {
+      border-bottom-color: #999;
+    }
+
+    .tab.active {
+      font-weight: 700;
+      border-bottom-color: #000;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px 22px;
+      min-height: 200px;
+    }
+
+    .card {
+      display: block;
+    }
+
+    .card .thumb {
+      height: 134px;
+      border-radius: 12px;
+      font-size: 36px;
+    }
+
+    .card h3 {
+      margin-top: 6px;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .card:hover h3 {
+      text-decoration: underline;
+    }
+
+    .kosong {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #666;
+      padding: 40px 0;
+    }
+
+    .paging {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 40px;
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+
+    .paging button {
+      padding: 6px 10px;
+      min-width: 31px;
+      background: #d9d9d9;
+    }
+
+    .paging button.nav {
+      background: none;
+      padding: 6px 4px;
+    }
+
+    .paging button.nav:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .paging button.active {
+      background: #000;
+      color: #fff;
+    }
+
+    .paging span {
+      color: #333;
+    }
+
+    @media (min-width: 1024px) {
+      .galeri-page {
+        padding: 50px 0 120px;
+      }
+
+      .galeri-page h1 {
+        font-size: 48px;
+        margin-bottom: 24px;
+      }
+
+      .tabs {
+        gap: 44px;
+        margin-bottom: 50px;
+      }
+
+      .tab {
+        font-size: 20px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px 58px;
+      }
+
+      .card .thumb {
+        height: 270px;
+        font-size: 60px;
+      }
+
+      .card h3 {
+        margin-top: 6px;
+        font-size: 26px;
+        font-weight: 700;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+
+      .paging {
+        gap: 10px;
+        margin-top: 70px;
+        font-size: 18px;
+      }
+
+      .paging button {
+        padding: 6px 12px;
+        min-width: 37px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- navbar -->
   <header class="navbar">
     <div class="container">
-      <a href="index.html" class="logo">Logo</a>
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+
+      <!-- menu desktop dengan dropdown -->
       <nav class="nav-links" aria-label="Menu utama">
         <div class="nav-item">
-          <button type="button" class="nav-btn" aria-expanded="false">Products <i class="fa-solid fa-caret-up"></i></button>
+          <a href="produk.html" class="nav-link">Products</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Products">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
           <ul class="nav-dropdown">
-            <!-- <li><a href="#">BBO Events</a></li><li><a href="#">BBO Jobs</a></li><li><a href="#">Toko BBO</a></li><li><a href="#">BBO Pay</a></li> -->
-            <li><a href="produk.html#events">BBO Events</a></li>
+            <li><a href="BBOEVENTS.html">BBO Events</a></li>
             <li><a href="produk.html#jobs">BBO Jobs</a></li>
             <li><a href="produk.html#toko">Toko BBO</a></li>
             <li><a href="produk.html#pay">BBO Pay</a></li>
           </ul>
         </div>
+
         <div class="nav-item">
-          <button type="button" class="nav-btn" aria-expanded="false">Our Services <i class="fa-solid fa-caret-up"></i></button>
+          <a href="#" class="nav-link">Our Services</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Our Services">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
           <ul class="nav-dropdown">
-            <li><a href="#">Login Dashboard</a></li><li><a href="#">Claim Code</a></li>
+            <li><a href="#">Login Dashboard</a></li>
+            <li><a href="#">Claim Code</a></li>
           </ul>
         </div>
+
         <div class="nav-item">
-          <button type="button" class="nav-btn" aria-expanded="false">About Us <i class="fa-solid fa-caret-up"></i></button>
+          <a href="#" class="nav-link">About Us</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu About Us">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
           <ul class="nav-dropdown">
-            <li><a href="#">Privacy Policy</a></li><li><a href="#">Term and Conditions</a></li><li><a href="#">Contact Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term and Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
           </ul>
         </div>
       </nav>
-      <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false"><span></span><span></span><span></span></button>
+
+      <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </header>
 
+  <!-- sidebar menu (muncul dari kiri) -->
   <div class="overlay" id="overlay"></div>
+
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-head">
-      <a href="index.html" class="logo">Logo</a>
-      <button class="btn-close" id="btnClose" aria-label="Tutup menu"><i class="fa-solid fa-xmark"></i></button>
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+      <button class="btn-close" id="btnClose" aria-label="Tutup menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
+
     <ul class="sidebar-menu">
-      <li><a href="index.html">Home</a></li>
+      <li><a href="webBBO_HOMEPAGE.html">Home</a></li>
+
       <li>
-        <button class="dropdown-btn" aria-expanded="false">About Us <i class="fa-solid fa-caret-up"></i></button>
-        <ul class="submenu"><li><a href="#">Privacy Policy</a></li><li><a href="#">Term and Conditions</a></li><li><a href="#">Contact Us</a></li></ul>
+        <button class="dropdown-btn" id="btnAbout" aria-expanded="false">
+          About Us <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
       </li>
+
       <li>
-        <button class="dropdown-btn" aria-expanded="false">Our Services <i class="fa-solid fa-caret-up"></i></button>
-        <ul class="submenu"><li><a href="#">Login Dashboard</a></li><li><a href="#">Claim Code</a></li></ul>
+        <button class="dropdown-btn" aria-expanded="false">
+          Our Services <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
       </li>
+
       <li>
-        <button class="dropdown-btn" aria-expanded="false">Products <i class="fa-solid fa-caret-up"></i></button>
-        <ul class="submenu"><li><a href="#">BBO Events</a></li><li><a href="#">BBO Jobs</a></li><li><a href="#">Toko BBO</a></li><li><a href="#">BBO Pay</a></li></ul>
+        <button class="dropdown-btn" aria-expanded="false">
+          Products <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
       </li>
     </ul>
   </aside>
@@ -205,39 +780,58 @@
     </div>
   </main>
 
+  <!-- footer -->
   <footer class="footer">
     <div class="container footer-wrap">
+
       <div class="f-brand">
-        <a href="index.html" class="logo">Logo</a>
+        <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
         <div class="footer-img">
           <div class="placeholder"><i class="fa-regular fa-image"></i></div>
           <div class="placeholder"><i class="fa-regular fa-image"></i></div>
         </div>
       </div>
+
       <div class="f-about">
         <h3>About Us</h3>
-        <ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Term and Conditions</a></li><li><a href="#">Contact Us</a></li></ul>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
       </div>
+
       <div class="f-service">
         <h3>Our Services</h3>
-        <ul><li><a href="#">Login Dashboard</a></li><li><a href="#">Claim Code</a></li></ul>
+        <ul>
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
       </div>
+
       <div class="f-product">
         <h3>Products</h3>
         <ul>
-          <li><a href="produk.html#events">BBO Events</a></li>
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
           <li><a href="produk.html#jobs">BBO Jobs</a></li>
           <li><a href="produk.html#toko">Toko BBO</a></li>
           <li><a href="produk.html#pay">BBO Pay</a></li>
         </ul>
-        <!-- <ul><li><a href="#">BBO Events</a></li><li><a href="#">BBO Jobs</a></li><li><a href="#">Toko BBO</a></li><li><a href="#">BBO Pay</a></li></ul> -->
       </div>
+
       <div class="f-app">
         <h3>Download The BBO App</h3>
         <div class="store-btn">
-          <a href="#"><i class="fa-brands fa-apple"></i><span>Download on The<strong>APP Store</strong></span></a>
-          <a href="#"><i class="fa-brands fa-google-play"></i><span>Get It On<strong>Google Play</strong></span></a>
+          <a href="#">
+            <i class="fa-brands fa-apple"></i>
+            <span>Download on The<strong>APP Store</strong></span>
+          </a>
+          <a href="#">
+            <i class="fa-brands fa-google-play"></i>
+            <span>Get It On<strong>Google Play</strong></span>
+          </a>
         </div>
+
         <h3>Connect With Us</h3>
         <div class="sosmed">
           <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -246,63 +840,126 @@
           <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
         </div>
       </div>
+
     </div>
   </footer>
 
-  <div class="copyright"><div class="container">Copyright © 2026 BBO - All rights reserved. Powered by bbo.co.id</div></div>
+  <div class="copyright">
+    <div class="container">
+      Copyright © 2026 BBO - All rights reserved. Powered by bbo.co.id
+    </div>
+  </div>
+
+  <!-- tombol wa -->
   <a href="#" class="wa-float" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
   <script>
-    // ===== JS bersama: dropdown navbar & sidebar =====
+    // ---------- dropdown di header (desktop) ----------
+    // kalau satu dropdown dibuka, yang lain otomatis menutup
     const navBtns = document.querySelectorAll('.nav-btn');
+
     function tutupNav() {
-      navBtns.forEach(function (b) { b.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); });
+      navBtns.forEach(function (btn) {
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
     }
+
     navBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
         const sudahBuka = btn.classList.contains('open');
         tutupNav();
-        if (!sudahBuka) { btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+        if (!sudahBuka) {
+          btn.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
       });
     });
-    document.querySelectorAll('.nav-dropdown a').forEach(function (l) { l.addEventListener('click', tutupNav); });
-    document.addEventListener('click', function (e) { if (!e.target.closest('.nav-item')) tutupNav(); });
 
+    // tutup saat salah satu link di dropdown diklik
+    document.querySelectorAll('.nav-dropdown a').forEach(function (link) {
+      link.addEventListener('click', tutupNav);
+    });
+
+    // tutup saat klik di luar menu
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-item')) tutupNav();
+    });
+
+    // ---------- sidebar menu (mobile) ----------
     const btnMenu = document.getElementById('btnMenu');
+    const btnClose = document.getElementById('btnClose');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
-    function bukaSidebar() {
-      sidebar.classList.add('open'); overlay.classList.add('show'); btnMenu.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      btnMenu.setAttribute('aria-expanded', 'true'); btnMenu.setAttribute('aria-label', 'Tutup menu');
-    }
-    function tutupSidebar() {
-      sidebar.classList.remove('open'); overlay.classList.remove('show'); btnMenu.classList.remove('active');
-      document.body.style.overflow = '';
-      btnMenu.setAttribute('aria-expanded', 'false'); btnMenu.setAttribute('aria-label', 'Buka menu');
-    }
-    btnMenu.addEventListener('click', function () { sidebar.classList.contains('open') ? tutupSidebar() : bukaSidebar(); });
-    document.getElementById('btnClose').addEventListener('click', tutupSidebar);
-    overlay.addEventListener('click', tutupSidebar);
-    sidebar.querySelectorAll('a').forEach(function (l) { l.addEventListener('click', tutupSidebar); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { tutupSidebar(); tutupNav(); } });
-    window.addEventListener('resize', function () { window.innerWidth >= 1024 ? tutupSidebar() : tutupNav(); });
 
-    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
-    function tutupDropdown(btn) {
-      btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false');
-      btn.nextElementSibling.style.maxHeight = null;
+    function bukaSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      btnMenu.setAttribute('aria-expanded', 'true');
     }
+
+    function tutupSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      btnMenu.setAttribute('aria-expanded', 'false');
+    }
+
+    btnMenu.addEventListener('click', bukaSidebar);
+    btnClose.addEventListener('click', tutupSidebar);
+    overlay.addEventListener('click', tutupSidebar);
+
+    // tutup sidebar saat salah satu link diklik
+    sidebar.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', tutupSidebar);
+    });
+
+    // tutup semua menu saat tekan Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        tutupSidebar();
+        tutupNav();
+      }
+    });
+
+    // tutup otomatis saat ukuran layar berubah
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        tutupSidebar();
+      } else {
+        tutupNav();
+      }
+    });
+
+    // ---------- dropdown di sidebar ----------
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+
+    function bukaDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      isi.style.maxHeight = isi.scrollHeight + 'px';
+    }
+
+    function tutupDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      isi.style.maxHeight = null;
+    }
+
     dropdownBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
         const sudahBuka = btn.classList.contains('open');
         dropdownBtns.forEach(tutupDropdown);
-        if (!sudahBuka) {
-          btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
-          btn.nextElementSibling.style.maxHeight = btn.nextElementSibling.scrollHeight + 'px';
-        }
+        if (!sudahBuka) bukaDropdown(btn);
       });
     });
+
+    // About Us terbuka dari awal, seperti di coretan
+    // (hapus baris ini kalau mau semuanya tertutup)
+    bukaDropdown(document.getElementById('btnAbout'));
 
     // ===== JS khusus halaman Galery =====
     // data event (ganti dengan data asli / dari API)
@@ -389,5 +1046,6 @@
 
     render();
   </script>
+
 </body>
 </html>

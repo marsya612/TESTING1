@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBO - Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===================== CSS BERSAMA (semua halaman) ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+      font-size: 40px;
+    }
+
+    /* ---------- navbar ---------- */
+    .navbar {
+      height: 90px;
+      background: #fff;
+      position: relative;
+      z-index: 50;
+    }
+
+    .navbar .container {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    /* menu desktop (muncul di layar besar saja) */
+    .nav-links {
+      display: none;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* tulisan menu = link ke halaman */
+    .nav-link {
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    /* panah kecil = tombol buka dropdown */
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.6;
+    }
+
+    .nav-btn i {
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .nav-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 210px;
+      padding: 8px 0;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+      z-index: 20;
+    }
+
+    /* menu paling kanan dibuka ke arah kiri supaya tidak keluar layar */
+    .nav-item:last-child .nav-dropdown {
+      left: auto;
+      right: 0;
+    }
+
+    .nav-btn.open + .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .nav-dropdown a:hover {
+      background: #f2f2f2;
+    }
+
+    /* tombol hamburger */
+    .btn-menu {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-menu span {
+      display: block;
+      width: 30px;
+      height: 3px;
+      background: #000;
+      border-radius: 3px;
+    }
+
+    /* ---------- sidebar menu (slide dari kiri) ---------- */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 150;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 320px;
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition: transform 0.3s ease, visibility 0.3s;
+      z-index: 200;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .sidebar-head {
+      height: 90px;
+      flex: none;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #000;
+    }
+
+    .btn-close {
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-menu {
+      padding: 10px 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu > li > a,
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .dropdown-btn i {
+      font-size: 16px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .dropdown-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .submenu a {
+      display: block;
+      padding: 10px 0 10px 24px;
+      font-size: 15px;
+    }
+
+    .submenu a:hover,
+    .sidebar-menu > li > a:hover {
+      text-decoration: underline;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 40px 0 30px;
+    }
+
+    .footer-wrap {
+      display: grid;
+      grid-template-columns: 110px 1.3fr 0.8fr;
+      grid-template-areas:
+        "brand about product"
+        "brand service product"
+        "app app app";
+      column-gap: 14px;
+      row-gap: 16px;
+    }
+
+    .f-brand   { grid-area: brand; }
+    .f-about   { grid-area: about; }
+    .f-service { grid-area: service; }
+    .f-product { grid-area: product; }
+    .f-app     { grid-area: app; margin-top: 12px; }
+
+    .footer-img {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .footer-img div {
+      height: 56px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    .footer h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer li a {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+
+    .footer li a:hover {
+      text-decoration: underline;
+    }
+
+    .store-btn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .store-btn a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .store-btn i {
+      font-size: 24px;
+    }
+
+    .store-btn strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .sosmed {
+      display: flex;
+      gap: 14px;
+    }
+
+    .sosmed a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .sosmed a:hover {
+      background: #333;
+    }
+
+    .copyright {
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+
+    /* ---------- tombol wa melayang ---------- */
+    .wa-float {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    @media (min-width: 1024px) {
+      .navbar {
+        height: 100px;
+      }
+
+      .logo {
+        font-size: 28px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .btn-menu,
+      .sidebar,
+      .overlay {
+        display: none !important;
+      }
+
+      .footer {
+        padding: 55px 0;
+      }
+
+      .footer-wrap {
+        grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.5fr;
+        grid-template-areas: "brand product service about app";
+        column-gap: 30px;
+      }
+
+      .f-app {
+        margin-top: 0;
+      }
+
+      .footer-img {
+        flex-direction: row;
+        margin-top: 30px;
+      }
+
+      .footer-img div {
+        width: 150px;
+        height: 76px;
+      }
+
+      .footer h3 {
+        font-size: 22px;
+      }
+
+      .footer li a {
+        font-size: 18px;
+      }
+
+      .wa-float {
+        width: 70px;
+        height: 70px;
+        font-size: 34px;
+      }
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    :root {
+      /* jarak dari tepi layar ke awal isi (sama dengan .container) */
+      --gutter: calc((100vw - min(90vw, 1200px)) / 2);
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    .only-desktop {
+      display: none;
+    }
+
+    /* icon plus bulat */
+    .icon-plus {
+      width: 44px;
+      height: 44px;
+      border: 3px solid #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
+    }
+
+    .icon-plus.small {
+      width: 26px;
+      height: 26px;
+      border-width: 2px;
+      font-size: 11px;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      background: #d9d9d9;
+      padding: 22px 0 28px;
+    }
+
+    .hero .container {
+      position: relative;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .breadcrumb span {
+      width: 1px;
+      height: 16px;
+      background: #000;
+    }
+
+    .breadcrumb strong {
+      font-weight: 600;
+    }
+
+    .hero-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .hero-text h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .hero-text p {
+      font-size: 12px;
+      line-height: 1.6;
+      max-width: 230px;
+    }
+
+    .hero-img {
+      flex: none;
+      width: 96px;
+      height: 96px;
+      border: 1px solid #b3b3b3;
+      border-radius: 16px;
+      font-size: 36px;
+      color: #b3b3b3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ---------- pencarian ---------- */
+    .search {
+      display: flex;
+      align-items: center;
+      width: 90%;
+      max-width: 520px;
+      margin: 28px auto 10px;
+      padding: 0 14px;
+      height: 40px;
+      background: #e3e3e3;
+      border-radius: 10px;
+    }
+
+    .search input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .search button {
+      font-size: 15px;
+    }
+
+    /* ---------- judul bagian (label abu-abu) ---------- */
+    .section {
+      margin-top: 36px;
+    }
+
+    .section-label {
+      display: inline-block;
+      background: #d9d9d9;
+      padding: 10px 24px 10px var(--gutter);
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 22px;
+    }
+
+    /* ---------- kartu event ---------- */
+    .card {
+      display: block;
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border-radius: 10px;
+      font-size: 36px;
+    }
+
+    .card h3 {
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* baris kartu yang bisa digeser (Events You'll Love & Trending) */
+    .row-wrap {
+      position: relative;
+    }
+
+    .row {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .row .card {
+      flex: 0 0 calc((100% - 15px) / 2);
+      scroll-snap-align: start;
+    }
+
+    .btn-row {
+      position: absolute;
+      top: 50%;
+      transform: translateY(calc(-50% - 14px));
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #8c8c8c;
+      color: #fff;
+      font-size: 14px;
+      z-index: 2;
+    }
+
+    .btn-row.prev { left: -14px; }
+    .btn-row.next { right: -14px; }
+
+    /* ---------- tab ---------- */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      margin-bottom: 18px;
+    }
+
+    .tab {
+      padding: 6px 2px;
+      font-size: 14px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab:hover {
+      border-bottom-color: #999;
+    }
+
+    .tab.active {
+      font-weight: 700;
+      border-bottom-color: #000;
+    }
+
+    /* ---------- upcoming events (timeline per bulan) ---------- */
+    .month-group {
+      position: relative;
+      padding-left: 66px;
+      margin-bottom: 26px;
+    }
+
+    .month-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 56px;
+      padding: 8px 0;
+      background: #d9d9d9;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* garis putus-putus di bawah label bulan */
+    .month-group::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      top: 40px;
+      bottom: -10px;
+      border-left: 1px dashed #b3b3b3;
+    }
+
+    .month-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .see-more {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 4px 0 10px;
+    }
+
+    .see-more:hover {
+      text-decoration: underline;
+    }
+
+    .see-all {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      color: #0095ff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .see-all:hover {
+      text-decoration: underline;
+    }
+
+    /* ---------- past events (grid) ---------- */
+    .past-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px 15px;
+    }
+
+    /* kartu ke-5 dan ke-6 hanya untuk desktop */
+    .past-desktop {
+      display: none;
+    }
+
+    .footer {
+      margin-top: 50px;
+    }
+
+    @media (min-width: 1024px) {
+      .only-desktop {
+        display: block;
+      }
+
+      /* hero */
+      .hero {
+        padding: 22px 0 60px;
+        min-height: 270px;
+      }
+
+      .breadcrumb {
+        font-size: 16px;
+        margin-bottom: 40px;
+      }
+
+      .hero-text h1 {
+        font-size: 48px;
+        margin-bottom: 14px;
+      }
+
+      .hero-text p {
+        font-size: 14px;
+        max-width: 340px;
+      }
+
+      /* gambar hero ada di tengah, seperti di wireframe */
+      .hero-img {
+        position: absolute;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 190px;
+        height: 190px;
+        border-radius: 28px;
+        font-size: 70px;
+      }
+
+      .search {
+        margin: 36px auto 20px;
+        height: 44px;
+      }
+
+      /* judul bagian */
+      .section {
+        margin-top: 46px;
+      }
+
+      .section-label {
+        font-size: 17px;
+        margin-bottom: 26px;
+      }
+
+      /* kartu */
+      .card-img {
+        border-radius: 12px;
+        font-size: 48px;
+      }
+
+      .card h3 {
+        margin-top: 10px;
+        font-size: 18px;
+        text-transform: none;
+      }
+
+      .row {
+        gap: 30px;
+      }
+
+      .row .card {
+        flex: 0 0 calc((100% - 60px) / 3);
+      }
+
+      .btn-row {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+      }
+
+      .btn-row.prev { left: -22px; }
+      .btn-row.next { right: -22px; }
+
+      /* tab */
+      .tabs {
+        gap: 6px 30px;
+        margin-bottom: 26px;
+      }
+
+      .tab {
+        font-size: 16px;
+      }
+
+      /* upcoming: 2 kartu + See More Event dalam satu baris */
+      .month-group {
+        padding-left: 90px;
+        margin-bottom: 20px;
+      }
+
+      .month-label {
+        width: 56px;
+        font-size: 16px;
+      }
+
+      .month-group::before {
+        left: 28px;
+      }
+
+      .month-row {
+        grid-template-columns: 1fr 1fr 200px;
+        gap: 30px;
+        align-items: start;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #d9d9d9;
+      }
+
+      /* kartu ke-3 hanya untuk mobile */
+      .only-mobile {
+        display: none;
+      }
+
+      .see-more {
+        align-self: center;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 0;
+      }
+
+      .see-more .icon-plus.small {
+        width: 36px;
+        height: 36px;
+        border-width: 2px;
+        font-size: 14px;
+      }
+
+      .see-all {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      /* past events: grid 3 kolom */
+      .past-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px 30px;
+      }
+
+      .past-desktop {
+        display: block;
+      }
+
+      .footer {
+        margin-top: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+
+      <!-- menu desktop dengan dropdown -->
+      <nav class="nav-links" aria-label="Menu utama">
+        <div class="nav-item">
+          <a href="produk.html" class="nav-link">Products</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Products">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="BBOEVENTS.html">BBO Events</a></li>
+            <li><a href="produk.html#jobs">BBO Jobs</a></li>
+            <li><a href="produk.html#toko">Toko BBO</a></li>
+            <li><a href="produk.html#pay">BBO Pay</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">Our Services</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Our Services">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Login Dashboard</a></li>
+            <li><a href="#">Claim Code</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">About Us</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu About Us">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term and Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- sidebar menu (muncul dari kiri) -->
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+      <button class="btn-close" id="btnClose" aria-label="Tutup menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li><a href="webBBO_HOMEPAGE.html">Home</a></li>
+
+      <li>
+        <button class="dropdown-btn" id="btnAbout" aria-expanded="false">
+          About Us <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Our Services <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Products <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- hero -->
+  <section class="hero" id="events">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="produk.html">Products</a>
+        <span></span>
+        <strong>BBO Events</strong>
+      </div>
+
+      <div class="hero-body">
+        <div class="hero-text">
+          <h1>BBO Events</h1>
+          <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae.</p>
+        </div>
+        <div class="hero-img"><i class="fa-regular fa-image"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- pencarian -->
+  <form class="search" id="searchForm" role="search">
+    <input type="text" placeholder="Find Your Vibe" aria-label="Cari event">
+    <button type="submit" aria-label="Cari"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
+
+  <!-- events you'll love -->
+  <section class="section">
+    <h2 class="section-label">Events You'll Love</h2>
+
+    <div class="container row-wrap">
+      <button class="btn-row prev" data-row="rowLove" data-arah="-1" aria-label="Sebelumnya"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="btn-row next" data-row="rowLove" data-arah="1" aria-label="Berikutnya"><i class="fa-solid fa-arrow-right"></i></button>
+
+      <div class="row" id="rowLove">
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- trending events -->
+  <section class="section">
+    <h2 class="section-label">Trending Events</h2>
+
+    <div class="container row-wrap">
+      <button class="btn-row prev" data-row="rowTrending" data-arah="-1" aria-label="Sebelumnya"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="btn-row next" data-row="rowTrending" data-arah="1" aria-label="Berikutnya"><i class="fa-solid fa-arrow-right"></i></button>
+
+      <div class="row" id="rowTrending">
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- upcoming events -->
+  <section class="section">
+    <h2 class="section-label">Upcoming Events</h2>
+
+    <div class="container">
+      <div class="tabs" data-target="upcomingList">
+        <button class="tab active" data-filter="all">All Event</button>
+        <button class="tab" data-filter="now">Events This Month</button>
+      </div>
+
+      <div id="upcomingList">
+
+        <div class="month-group" data-kategori="now">
+          <div class="month-label">Jan</div>
+          <div class="month-row">
+            <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="card only-mobile"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="see-more">
+              <span class="icon-plus small"><i class="fa-solid fa-plus"></i></span>
+              See More Event
+            </a>
+          </div>
+        </div>
+
+        <div class="month-group" data-kategori="later">
+          <div class="month-label">Feb</div>
+          <div class="month-row">
+            <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="card only-mobile"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="see-more">
+              <span class="icon-plus small"><i class="fa-solid fa-plus"></i></span>
+              See More Event
+            </a>
+          </div>
+        </div>
+
+        <!-- bulan Mar hanya tampil di desktop -->
+        <div class="month-group only-desktop" data-kategori="later">
+          <div class="month-label">Mar</div>
+          <div class="month-row">
+            <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            <a href="#" class="see-more">
+              <span class="icon-plus small"><i class="fa-solid fa-plus"></i></span>
+              See More Event
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <a href="#" class="see-all">See All Event <i class="fa-solid fa-angle-right"></i></a>
+    </div>
+  </section>
+
+  <!-- past events -->
+  <section class="section">
+    <h2 class="section-label">Past Events</h2>
+
+    <div class="container">
+      <div class="tabs" data-target="pastList">
+        <button class="tab active" data-filter="all">All Event</button>
+        <button class="tab" data-filter="trending">Trending Events</button>
+        <button class="tab" data-filter="concert">Concert</button>
+        <button class="tab" data-filter="exhibition">Exhibition</button>
+      </div>
+
+      <div class="past-grid" id="pastList">
+        <a href="#" class="card" data-kategori="trending"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card" data-kategori="concert"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card" data-kategori="exhibition"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card" data-kategori="trending"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card past-desktop" data-kategori="concert"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+        <a href="#" class="card past-desktop" data-kategori="exhibition"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+      </div>
+
+      <a href="#" class="see-all">See All Event <i class="fa-solid fa-angle-right"></i></a>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container footer-wrap">
+
+      <div class="f-brand">
+        <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+        <div class="footer-img">
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+        </div>
+      </div>
+
+      <div class="f-about">
+        <h3>About Us</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="f-service">
+        <h3>Our Services</h3>
+        <ul>
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </div>
+
+      <div class="f-product">
+        <h3>Products</h3>
+        <ul>
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </div>
+
+      <div class="f-app">
+        <h3>Download The BBO App</h3>
+        <div class="store-btn">
+          <a href="#">
+            <i class="fa-brands fa-apple"></i>
+            <span>Download on The<strong>APP Store</strong></span>
+          </a>
+          <a href="#">
+            <i class="fa-brands fa-google-play"></i>
+            <span>Get It On<strong>Google Play</strong></span>
+          </a>
+        </div>
+
+        <h3>Connect With Us</h3>
+        <div class="sosmed">
+          <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <div class="copyright">
+    <div class="container">
+      Copyright © 2026 BBO - All rights reserved. Powered by bbo.co.id
+    </div>
+  </div>
+
+  <!-- tombol wa -->
+  <a href="#" class="wa-float" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
+  <script>
+    // ---------- dropdown di header (desktop) ----------
+    // kalau satu dropdown dibuka, yang lain otomatis menutup
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    function tutupNav() {
+      navBtns.forEach(function (btn) {
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    navBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        tutupNav();
+        if (!sudahBuka) {
+          btn.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // tutup saat salah satu link di dropdown diklik
+    document.querySelectorAll('.nav-dropdown a').forEach(function (link) {
+      link.addEventListener('click', tutupNav);
+    });
+
+    // tutup saat klik di luar menu
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-item')) tutupNav();
+    });
+
+    // ---------- sidebar menu (mobile) ----------
+    const btnMenu = document.getElementById('btnMenu');
+    const btnClose = document.getElementById('btnClose');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    function bukaSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      btnMenu.setAttribute('aria-expanded', 'true');
+    }
+
+    function tutupSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      btnMenu.setAttribute('aria-expanded', 'false');
+    }
+
+    btnMenu.addEventListener('click', bukaSidebar);
+    btnClose.addEventListener('click', tutupSidebar);
+    overlay.addEventListener('click', tutupSidebar);
+
+    // tutup sidebar saat salah satu link diklik
+    sidebar.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', tutupSidebar);
+    });
+
+    // tutup semua menu saat tekan Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        tutupSidebar();
+        tutupNav();
+      }
+    });
+
+    // tutup otomatis saat ukuran layar berubah
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        tutupSidebar();
+      } else {
+        tutupNav();
+      }
+    });
+
+    // ---------- dropdown di sidebar ----------
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+
+    function bukaDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      isi.style.maxHeight = isi.scrollHeight + 'px';
+    }
+
+    function tutupDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      isi.style.maxHeight = null;
+    }
+
+    dropdownBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        dropdownBtns.forEach(tutupDropdown);
+        if (!sudahBuka) bukaDropdown(btn);
+      });
+    });
+
+    // About Us terbuka dari awal, seperti di coretan
+    // (hapus baris ini kalau mau semuanya tertutup)
+    bukaDropdown(document.getElementById('btnAbout'));
+
+    // ---------- pencarian ----------
+    // (sementara belum mencari apa-apa, tinggal sambungkan ke backend nanti)
+    document.getElementById('searchForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+    });
+
+    // ---------- panah geser kartu (Events You'll Love & Trending) ----------
+    document.querySelectorAll('.btn-row').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const row = document.getElementById(btn.dataset.row);
+        const kartu = row.querySelector('.card');
+        const lebar = kartu.offsetWidth + parseFloat(getComputedStyle(row).columnGap || 0);
+        row.scrollBy({ left: Number(btn.dataset.arah) * lebar, behavior: 'smooth' });
+      });
+    });
+
+    // ---------- tab filter (Upcoming & Past Events) ----------
+    document.querySelectorAll('.tabs').forEach(function (grup) {
+      const tabs = grup.querySelectorAll('.tab');
+      const daftar = document.getElementById(grup.dataset.target);
+      const items = daftar.querySelectorAll('[data-kategori]');
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+
+          const kategori = tab.dataset.filter;
+          items.forEach(function (item) {
+            const cocok = kategori === 'all' || item.dataset.kategori === kategori;
+            item.classList.toggle('hide', !cocok);
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

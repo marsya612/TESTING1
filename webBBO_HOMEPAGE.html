@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
+    /* ===================== CSS BERSAMA (semua halaman) ===================== */
     * {
       margin: 0;
       padding: 0;
@@ -28,8 +29,12 @@
       list-style: none;
     }
 
-    button {
+    button,
+    input {
       font-family: inherit;
+    }
+
+    button {
       background: none;
       border: none;
       color: inherit;
@@ -51,24 +56,12 @@
       font-size: 40px;
     }
 
-    /* icon plus bulat untuk Show All */
-    .icon-plus {
-      width: 44px;
-      height: 44px;
-      border: 3px solid #000;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #000;
-    }
-
     /* ---------- navbar ---------- */
     .navbar {
       height: 90px;
       background: #fff;
       position: relative;
+      z-index: 50;
     }
 
     .navbar .container {
@@ -172,7 +165,6 @@
 
     /* tombol hamburger */
     .btn-menu {
-      position: relative;
       width: 44px;
       height: 44px;
       display: flex;
@@ -188,23 +180,6 @@
       height: 3px;
       background: #000;
       border-radius: 3px;
-      transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s;
-    }
-
-    .btn-menu.active span {
-      background: #fff;
-    }
-
-    .btn-menu.active span:nth-child(1) {
-      transform: translateY(10px) rotate(45deg);
-    }
-
-    .btn-menu.active span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .btn-menu.active span:nth-child(3) {
-      transform: translateY(-10px) rotate(-45deg);
     }
 
     /* ---------- sidebar menu (slide dari kiri) ---------- */
@@ -309,6 +284,203 @@
     .submenu a:hover,
     .sidebar-menu > li > a:hover {
       text-decoration: underline;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 40px 0 30px;
+    }
+
+    .footer-wrap {
+      display: grid;
+      grid-template-columns: 110px 1.3fr 0.8fr;
+      grid-template-areas:
+        "brand about product"
+        "brand service product"
+        "app app app";
+      column-gap: 14px;
+      row-gap: 16px;
+    }
+
+    .f-brand   { grid-area: brand; }
+    .f-about   { grid-area: about; }
+    .f-service { grid-area: service; }
+    .f-product { grid-area: product; }
+    .f-app     { grid-area: app; margin-top: 12px; }
+
+    .footer-img {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .footer-img div {
+      height: 56px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    .footer h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer li a {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+
+    .footer li a:hover {
+      text-decoration: underline;
+    }
+
+    .store-btn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .store-btn a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .store-btn i {
+      font-size: 24px;
+    }
+
+    .store-btn strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .sosmed {
+      display: flex;
+      gap: 14px;
+    }
+
+    .sosmed a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .sosmed a:hover {
+      background: #333;
+    }
+
+    .copyright {
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+
+    /* ---------- tombol wa melayang ---------- */
+    .wa-float {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    @media (min-width: 1024px) {
+      .navbar {
+        height: 100px;
+      }
+
+      .logo {
+        font-size: 28px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .btn-menu,
+      .sidebar,
+      .overlay {
+        display: none !important;
+      }
+
+      .footer {
+        padding: 55px 0;
+      }
+
+      .footer-wrap {
+        grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.5fr;
+        grid-template-areas: "brand product service about app";
+        column-gap: 30px;
+      }
+
+      .f-app {
+        margin-top: 0;
+      }
+
+      .footer-img {
+        flex-direction: row;
+        margin-top: 30px;
+      }
+
+      .footer-img div {
+        width: 150px;
+        height: 76px;
+      }
+
+      .footer h3 {
+        font-size: 22px;
+      }
+
+      .footer li a {
+        font-size: 18px;
+      }
+
+      .wa-float {
+        width: 70px;
+        height: 70px;
+        font-size: 34px;
+      }
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    /* icon plus bulat untuk Show All */
+    .icon-plus {
+      width: 44px;
+      height: 44px;
+      border: 3px solid #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
     }
 
     /* ---------- slider utama ---------- */
@@ -469,131 +641,6 @@
       display: none;
     }
 
-    /* ---------- footer ---------- */
-    .footer {
-      padding: 40px 0 30px;
-    }
-
-    .footer-wrap {
-      display: grid;
-      grid-template-columns: 110px 1.3fr 0.8fr;
-      grid-template-areas:
-        "brand about product"
-        "brand service product"
-        "app app app";
-      column-gap: 14px;
-      row-gap: 16px;
-    }
-
-    .f-brand   { grid-area: brand; }
-    .f-about   { grid-area: about; }
-    .f-service { grid-area: service; }
-    .f-product { grid-area: product; }
-    .f-app     { grid-area: app; margin-top: 12px; }
-
-    .footer-img {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-top: 14px;
-    }
-
-    .footer-img div {
-      height: 56px;
-      border-radius: 10px;
-      font-size: 22px;
-    }
-
-    .footer h3 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .footer li a {
-      display: block;
-      padding: 4px 0;
-      font-size: 13px;
-    }
-
-    .footer li a:hover {
-      text-decoration: underline;
-    }
-
-    .store-btn {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-
-    .store-btn a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #000;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 11px;
-    }
-
-    .store-btn i {
-      font-size: 24px;
-    }
-
-    .store-btn strong {
-      display: block;
-      font-size: 14px;
-    }
-
-    .sosmed {
-      display: flex;
-      gap: 14px;
-    }
-
-    .sosmed a {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #000;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-    }
-
-    .sosmed a:hover {
-      background: #333;
-    }
-
-    .copyright {
-      background: #000;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 20px 0;
-    }
-
-    /* ---------- tombol wa melayang ---------- */
-    .wa-float {
-      position: fixed;
-      right: 16px;
-      bottom: 20px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: #000;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-      z-index: 100;
-    }
-
     /* ---------- tablet ---------- */
     @media (min-width: 640px) {
       .galeri-list {
@@ -608,26 +655,7 @@
       .btn-galeri.next { right: 24%; }
     }
 
-    /* ---------- desktop ---------- */
     @media (min-width: 1024px) {
-      .navbar {
-        height: 100px;
-      }
-
-      .logo {
-        font-size: 28px;
-      }
-
-      .nav-links {
-        display: flex;
-      }
-
-      .btn-menu,
-      .sidebar,
-      .overlay {
-        display: none !important;
-      }
-
       .slide {
         height: 600px;
       }
@@ -702,44 +730,6 @@
       .grid-item.show-all:hover {
         text-decoration: underline;
       }
-
-      .footer {
-        padding: 55px 0;
-      }
-
-      .footer-wrap {
-        grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.5fr;
-        grid-template-areas: "brand product service about app";
-        column-gap: 30px;
-      }
-
-      .f-app {
-        margin-top: 0;
-      }
-
-      .footer-img {
-        flex-direction: row;
-        margin-top: 30px;
-      }
-
-      .footer-img div {
-        width: 150px;
-        height: 76px;
-      }
-
-      .footer h3 {
-        font-size: 22px;
-      }
-
-      .footer li a {
-        font-size: 18px;
-      }
-
-      .wa-float {
-        width: 70px;
-        height: 70px;
-        font-size: 34px;
-      }
     }
   </style>
 </head>
@@ -748,7 +738,7 @@
   <!-- navbar -->
   <header class="navbar">
     <div class="container">
-      <a href="#" class="logo">Logo</a>
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
 
       <!-- menu desktop dengan dropdown -->
       <nav class="nav-links" aria-label="Menu utama">
@@ -758,7 +748,7 @@
             <i class="fa-solid fa-caret-up"></i>
           </button>
           <ul class="nav-dropdown">
-            <li><a href="produk.html#events">BBO Events</a></li>
+            <li><a href="BBOEVENTS.html">BBO Events</a></li>
             <li><a href="produk.html#jobs">BBO Jobs</a></li>
             <li><a href="produk.html#toko">Toko BBO</a></li>
             <li><a href="produk.html#pay">BBO Pay</a></li>
@@ -802,14 +792,14 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-head">
-      <a href="#" class="logo">Logo</a>
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
       <button class="btn-close" id="btnClose" aria-label="Tutup menu">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
 
     <ul class="sidebar-menu">
-      <li><a href="#">Home</a></li>
+      <li><a href="webBBO_HOMEPAGE.html">Home</a></li>
 
       <li>
         <button class="dropdown-btn" id="btnAbout" aria-expanded="false">
@@ -837,10 +827,10 @@
           Products <i class="fa-solid fa-caret-up"></i>
         </button>
         <ul class="submenu">
-          <li><a href="#">BBO Events</a></li>
-          <li><a href="#">BBO Jobs</a></li>
-          <li><a href="#">Toko BBO</a></li>
-          <li><a href="#">BBO Pay</a></li>
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
         </ul>
       </li>
     </ul>
@@ -920,7 +910,7 @@
     <div class="container footer-wrap">
 
       <div class="f-brand">
-        <a href="#" class="logo">Logo</a>
+        <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
         <div class="footer-img">
           <div class="placeholder"><i class="fa-regular fa-image"></i></div>
           <div class="placeholder"><i class="fa-regular fa-image"></i></div>
@@ -947,7 +937,7 @@
       <div class="f-product">
         <h3>Products</h3>
         <ul>
-          <li><a href="produk.html#events">BBO Events</a></li>
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
           <li><a href="produk.html#jobs">BBO Jobs</a></li>
           <li><a href="produk.html#toko">Toko BBO</a></li>
           <li><a href="produk.html#pay">BBO Pay</a></li>
@@ -1030,30 +1020,18 @@
     function bukaSidebar() {
       sidebar.classList.add('open');
       overlay.classList.add('show');
-      btnMenu.classList.add('active');
       document.body.style.overflow = 'hidden';
       btnMenu.setAttribute('aria-expanded', 'true');
-      btnMenu.setAttribute('aria-label', 'Tutup menu');
     }
 
     function tutupSidebar() {
       sidebar.classList.remove('open');
       overlay.classList.remove('show');
-      btnMenu.classList.remove('active');
       document.body.style.overflow = '';
       btnMenu.setAttribute('aria-expanded', 'false');
-      btnMenu.setAttribute('aria-label', 'Buka menu');
     }
 
-    // hamburger: klik pertama buka, klik kedua (sudah jadi X) tutup
-    btnMenu.addEventListener('click', function () {
-      if (sidebar.classList.contains('open')) {
-        tutupSidebar();
-      } else {
-        bukaSidebar();
-      }
-    });
-
+    btnMenu.addEventListener('click', bukaSidebar);
     btnClose.addEventListener('click', tutupSidebar);
     overlay.addEventListener('click', tutupSidebar);
 
